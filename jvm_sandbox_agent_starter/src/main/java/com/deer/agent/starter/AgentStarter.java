@@ -28,11 +28,11 @@ public class AgentStarter {
             return;
         }
         System.out.println("find processId ,and ready to attach..."+processId);
-        String agentPath="/Users/yudongwei/Downloads/backup4/git/jvm_sandbox_demo/jvm_sandbox_agent/target/jvm_sandbox_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
-      //  agentPath="/Users/yudongwei/Downloads/backup4/git/jvm_sandbox_demo/jvm_sandbox_bytebuddy_agent/target/jvm_sandbox_bytebuddy_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
-      //  agentPath="/Users/yudongwei/Downloads/backup4/git/jvm_sandbox_demo/jvm_sandbox_javassist_agent/target/jvm_sandbox_javassist_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
-      // agentPath="/Users/yudongwei/Downloads/backup4/git/jvm_sandbox_demo/jvm_sandbox_ali_agent/target/jvm_sandbox_ali_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
-     agentPath="/Users/yudongwei/Downloads/backup4/git/jvm_sandbox_demo/jvm_sandbox_agent/target/jvm_sandbox_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
+        String agentPath="/Users/yudongwei/projects/jvm_sandbox_demo/jvm_sandbox_agent/target/jvm_sandbox_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
+      //  agentPath="/Users/yudongwei/projects/jvm_sandbox_demo/jvm_sandbox_bytebuddy_agent/target/jvm_sandbox_bytebuddy_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
+      //  agentPath="/Users/yudongwei/projects/jvm_sandbox_demo/jvm_sandbox_javassist_agent/target/jvm_sandbox_javassist_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
+      // agentPath="/Users/yudongwei/projects/jvm_sandbox_demo/jvm_sandbox_ali_agent/target/jvm_sandbox_ali_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
+     agentPath="/Users/yudongwei/projects/jvm_sandbox_demo/jvm_sandbox_agent/target/jvm_sandbox_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
         try {
             VirtualMachine vm = VirtualMachine.attach(processId);
             vm.loadAgent(agentPath);

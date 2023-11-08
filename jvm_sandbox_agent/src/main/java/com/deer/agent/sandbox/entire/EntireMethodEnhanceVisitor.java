@@ -29,7 +29,7 @@ public class EntireMethodEnhanceVisitor extends ClassVisitor implements Opcodes 
         if (isAbstractMethod || isNativeMethod) {
             return mv;
         }
-        mv = new EntireMethodVisitor(ASM7, mv, access, name, descriptor,clazzName);
+        mv = new EntireStandardMethodVisitor(ASM7, mv, access, name, descriptor,clazzName);
         return mv;
     }
 }
