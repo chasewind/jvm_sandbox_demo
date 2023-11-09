@@ -1,6 +1,5 @@
 package com.deer.agent.sandbox.handler;
 
-import com.deer.agent.sandbox.handler.TraceHandler;
 import com.deer.agent.sandbox.trace.MethodAfterResult;
 import com.deer.agent.sandbox.trace.MethodBeforeResult;
 

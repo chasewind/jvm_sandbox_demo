@@ -29,6 +29,11 @@ public class EntireMethodEnhanceVisitor extends ClassVisitor implements Opcodes 
         if (isAbstractMethod || isNativeMethod) {
             return mv;
         }
+        //判断是否匹配
+        if(!clazzName.startsWith("com/deer/base")){
+            return mv;
+        }
+
         mv = new EntireStandardMethodVisitor(ASM7, mv, access, name, descriptor,clazzName);
         return mv;
     }

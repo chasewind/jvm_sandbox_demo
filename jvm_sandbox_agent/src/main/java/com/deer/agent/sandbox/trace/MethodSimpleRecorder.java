@@ -22,7 +22,7 @@ public class MethodSimpleRecorder {
         }
     }
 
-    public static MethodAfterResult after(String uniqueId, Object response, Object[] request, String className, String methodName, String methodDesc) {
+    public static MethodAfterResult after( Object response,String uniqueId, Object[] request, String className, String methodName, String methodDesc) {
         MethodAfterResult afterResult = new MethodAfterResult();
         TraceHandler traceHandler= handlerMap.get(uniqueId);
         if(traceHandler == null){
