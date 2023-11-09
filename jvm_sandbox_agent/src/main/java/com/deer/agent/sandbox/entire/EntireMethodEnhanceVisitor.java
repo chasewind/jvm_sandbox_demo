@@ -33,7 +33,6 @@ public class EntireMethodEnhanceVisitor extends ClassVisitor implements Opcodes 
         if(!clazzName.startsWith("com/deer/base")){
             return mv;
         }
-
         mv = new EntireStandardMethodVisitor(ASM7, mv, access, name, descriptor,clazzName);
         return mv;
     }

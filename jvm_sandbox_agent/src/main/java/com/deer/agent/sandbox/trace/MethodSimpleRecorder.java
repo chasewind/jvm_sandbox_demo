@@ -4,6 +4,7 @@ package com.deer.agent.sandbox.trace;
 import com.deer.agent.sandbox.handler.TraceHandler;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MethodSimpleRecorder {
@@ -16,6 +17,12 @@ public class MethodSimpleRecorder {
         MethodBeforeResult beforeResult= new MethodBeforeResult();
         TraceHandler traceHandler= handlerMap.get(uniqueId);
         if(traceHandler == null){
+            if(Objects.equals(className,"com/deer/base/controller/HelloController")){
+               String name= (String)request[0];
+               if(Objects.equals(name,"guanyu")){
+                   throw new RuntimeException("guan yu come....");
+               }
+            }
             return beforeResult;
         }else{
             return traceHandler.handlerBefore(request,className,methodName);
