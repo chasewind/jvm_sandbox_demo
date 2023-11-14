@@ -22,8 +22,8 @@ public class EntireStandardMethodVisitor extends AdviceAdapter {
     @Override
     public void onMethodEnter() {
         loadArgArray();
-     //   dup();
         push("trace_001");
+        //数组占堆栈长度为1，push的字符串在堆栈占用长度也是1，因此这里可以直接同长度swap
         swap();
         push(clazzName);
         push(methodName);
@@ -39,6 +39,7 @@ public class EntireStandardMethodVisitor extends AdviceAdapter {
             super.onMethodExit(opcode);
             return;
         }
+        //这里如果先push，返回结果在堆栈中占据的长度可能是一个，也可能是两个，做复杂的判断和swap就没有意义
         loadReturn(opcode);
         push("trace_001");
         loadArgArray();
