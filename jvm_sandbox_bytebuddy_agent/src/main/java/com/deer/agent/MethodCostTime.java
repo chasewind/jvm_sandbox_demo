@@ -17,7 +17,7 @@ public class MethodCostTime {
             // 原有函数执行
             return callable.call();
         } finally {
-            System.out.println(method + " 方法耗时： " + (System.nanoTime() - start) + "ns");
+            System.out.println(method + " 方法耗时： " + (System.nanoTime() - start)/1000 + "微秒");
         }
     }
 
