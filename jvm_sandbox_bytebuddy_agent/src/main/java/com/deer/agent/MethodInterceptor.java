@@ -6,6 +6,10 @@ public class MethodInterceptor {
     public static final ThreadLocal<Stack<String>> callStack = ThreadLocal.withInitial(Stack::new);
     @Advice.OnMethodEnter
     public static void onEnter(@Advice.Origin String method) {
+        System.out.println("in agent:"+MethodInterceptor.class.getClassLoader());
+        Thread currentThread = Thread.currentThread();
+        System.out.println("agent is running in thread: " + currentThread.getName() + " (ID: " + currentThread.getId() + ")");
+
         Stack<String> stack = callStack.get();
         stack.push(method);
         System.out.println("Entering method: " + method);
