@@ -28,18 +28,18 @@ public class AgentMainForByteBuddy {
         AgentBuilder.Listener listener = new AgentBuilder.Listener() {
             @Override
             public void onDiscovery(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {
-                System.out.println("onDiscovery: " + s);
+//                System.out.println("onDiscovery: " + s);
 
             }
 
             @Override
             public void onTransformation(TypeDescription typeDescription, ClassLoader classLoader, JavaModule javaModule, boolean b, DynamicType dynamicType) {
-                System.out.println("onTransformation: " + typeDescription);
+//                System.out.println("onTransformation: " + typeDescription);
             }
 
             @Override
             public void onIgnored(TypeDescription typeDescription, ClassLoader classLoader, JavaModule javaModule, boolean b) {
-                System.out.println("onIgnored: " + typeDescription);
+//                System.out.println("onIgnored: " + typeDescription);
             }
 
             @Override
@@ -50,7 +50,7 @@ public class AgentMainForByteBuddy {
 
             @Override
             public void onComplete(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {
-                System.out.println("onComplete: " + s);
+//                System.out.println("onComplete: " + s);
             }
         };
         // 定义一个ClassFileTransformer，用于将修改后的类文件写入指定目录
