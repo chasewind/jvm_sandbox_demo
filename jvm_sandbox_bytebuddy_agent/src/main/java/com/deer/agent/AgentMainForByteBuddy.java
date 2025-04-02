@@ -35,14 +35,14 @@ public class AgentMainForByteBuddy {
 //            }
             //MethodDelegation
             if (classLoader != null && typeDescription.getName().startsWith("com.deer.base")) {
-                DynamicType.Unloaded<?> dynamicType = builder.method(
-                        ElementMatchers.not(ElementMatchers.isConstructor())
-                        .and(ElementMatchers.not(ElementMatchers.named("equals"))
-                                .and(ElementMatchers.not(ElementMatchers.named("toString"))
-                                        .and(ElementMatchers.not(ElementMatchers.named("hashCode"))
-                                                .and(ElementMatchers.not(ElementMatchers.named("clone"))))))).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
-                // 将字节码写入文件
-                writeClassToFile(dynamicType, dir);
+//                DynamicType.Unloaded<?> dynamicType = builder.method(
+//                        ElementMatchers.not(ElementMatchers.isConstructor())
+//                        .and(ElementMatchers.not(ElementMatchers.named("equals"))
+//                                .and(ElementMatchers.not(ElementMatchers.named("toString"))
+//                                        .and(ElementMatchers.not(ElementMatchers.named("hashCode"))
+//                                                .and(ElementMatchers.not(ElementMatchers.named("clone"))))))).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
+//                // 将字节码写入文件
+//                writeClassToFile(dynamicType, dir);
                 return builder.method(
                         ElementMatchers.not(ElementMatchers.isConstructor())
                                 .and(ElementMatchers.not(ElementMatchers.named("equals"))
@@ -79,9 +79,13 @@ public class AgentMainForByteBuddy {
             }
 
             @Override
-            public void onComplete(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {
-//                System.out.println("onComplete: " + s);
+            public void onComplete(String typeName, ClassLoader classLoader, JavaModule javaModule, boolean b) {
+                if(typeName.startsWith("com.deer.base")){
+                    System.out.println("onComplete: " + typeName);
+                }
+
             }
+
         };
 
         new AgentBuilder

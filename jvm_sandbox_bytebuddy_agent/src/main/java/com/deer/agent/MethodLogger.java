@@ -4,9 +4,10 @@ import java.lang.reflect.Parameter;
 public class MethodLogger {
     private static int depth = 0; // 记录当前调用层级
     public static void logEntry(Method method, Object[] args) {
+        String className = method.getDeclaringClass().getName();
         // 打印当前调用的层级
         String indent = getIndent(depth);
-        System.out.println(indent + "Entering method: " + method.toGenericString());
+        System.out.println(indent + "Entering method: "+className+"-->" + method.toGenericString());
         depth++; // 增加层级
         // 获取参数名
         Parameter[] parameters = method.getParameters();
