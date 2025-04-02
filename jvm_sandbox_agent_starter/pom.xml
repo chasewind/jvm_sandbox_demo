@@ -26,7 +26,7 @@
             <artifactId>tools</artifactId>
             <version>1.8</version>
             <scope>system</scope>
-            <systemPath>/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/tools.jar</systemPath>
+            <systemPath>/Users/dreamworld/Library/Java/JavaVirtualMachines/corretto-1.8.0_412/Contents/Home/lib/tools.jar</systemPath>
         </dependency>
 
     </dependencies>

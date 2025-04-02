@@ -26,12 +26,22 @@ public class AgentMainForByteBuddy {
         AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
 //            return builder.method(ElementMatchers.any()).intercept(MethodDelegation.to(MethodCostTime.class));
 
-            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base.service")) {
-                DynamicType.Unloaded<?> dynamicType = builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class)).make();
+            //Advice
+//            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base.service")) {
+//                DynamicType.Unloaded<?> dynamicType = builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class)).make();
+//                // 将字节码写入文件
+//                writeClassToFile(dynamicType, dir);
+//                return builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class));
+//            }
+            //MethodDelegation
+            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base")) {
+                DynamicType.Unloaded<?> dynamicType = builder.method(ElementMatchers.any()).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
                 // 将字节码写入文件
                 writeClassToFile(dynamicType, dir);
-                return builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class));
+                return builder.method(ElementMatchers.any()).intercept(MethodDelegation.to(MethodAroundInterceptor.class));
             }
+
+            //
 
             return builder; // 不进行转换
         };
@@ -66,7 +76,7 @@ public class AgentMainForByteBuddy {
 
         new AgentBuilder
                 .Default()
-                .type(ElementMatchers.nameStartsWith("com.deer.base.service"))
+                .type(ElementMatchers.nameStartsWith("com.deer.base"))
                 .transform(transformer)
                 .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
                 .with(listener)
