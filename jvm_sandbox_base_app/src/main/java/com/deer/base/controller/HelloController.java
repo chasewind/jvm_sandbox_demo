@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.function.Consumer;
+
 @RestController
 public class HelloController {
 
@@ -19,7 +21,10 @@ public class HelloController {
     public String sayHello(@PathVariable(name ="userName") String userName) {
         BaseService.record(userName);
         User user = SessionHolder.getCurrentUser();
-     //   System.out.println(Thread.currentThread().getId()+"--"+Thread.currentThread().getName()+"--current user: "+ user);
+        System.out.println(Thread.currentThread().getId()+"--"+Thread.currentThread().getName()+"--current user: "+ user);
+        //lambda 语法
+        Consumer<String> consumer = (s) -> System.out.println("in lambda: "+s);
+        consumer.accept(userName);
         return helloService.sayHello(userName);
     }
 

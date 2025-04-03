@@ -127,6 +127,7 @@ public class AgentMainForByteBuddy {
                 .type(ElementMatchers.nameStartsWith("com.deer.base"))
                 .transform(transformer)
                 .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
+//                .with(AgentBuilder.LambdaInstrumentationStrategy.ENABLED)
                 .with(listener)
                 .installOn(inst);
 //        new AgentBuilder.Default()
