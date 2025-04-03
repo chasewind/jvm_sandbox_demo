@@ -1,6 +1,5 @@
 package com.deer.agent;
 
-import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.type.TypeDescription;
@@ -12,11 +11,37 @@ import net.bytebuddy.utility.JavaModule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 
 public class AgentMainForByteBuddy {
+
+    public static void premain(String featureString, Instrumentation inst) {
+        setupAgent(inst);
+    }
     public static void agentmain(String agentArgs, Instrumentation inst){
+        setupAgent(inst);
+
+    }
+//    // 假设你想重新转换某个包内的所有类，例如 com.deer.base.controller
+//    String packageName = "com.deer.base.controller";
+//    retransformClassesInPackage(packageName, inst);
+    public static void retransformClassesInPackage(String packageName, Instrumentation inst) {
+        for (Class<?> clazz : inst.getAllLoadedClasses()) {
+            if (clazz.getName().startsWith(packageName)) {
+                retransformClass(clazz, inst);
+            }
+        }
+    }
+    public static void retransformClass(Class<?> clazz, Instrumentation inst) {
+        try {
+            inst.retransformClasses(clazz);
+            System.out.println("成功重新转换类: " + clazz.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setupAgent(Instrumentation inst) {
         // 指定输出目录
         String outputDir = "./output/";
         File dir = new File(outputDir);
@@ -37,24 +62,33 @@ public class AgentMainForByteBuddy {
             if (classLoader != null && typeDescription.getName().startsWith("com.deer.base")) {
 //                DynamicType.Unloaded<?> dynamicType = builder.method(
 //                        ElementMatchers.not(ElementMatchers.isConstructor())
-//                        .and(ElementMatchers.not(ElementMatchers.named("equals"))
-//                                .and(ElementMatchers.not(ElementMatchers.named("toString"))
-//                                        .and(ElementMatchers.not(ElementMatchers.named("hashCode"))
-//                                                .and(ElementMatchers.not(ElementMatchers.named("clone"))))))).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
+//                                .and(ElementMatchers.not(ElementMatchers.named("equals")))
+//                                .and(ElementMatchers.not(ElementMatchers.named("toString")))
+//                                .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
+//                                .and(ElementMatchers.not(ElementMatchers.named("clone")))
+//                                .and(ElementMatchers.not(ElementMatchers.named("finalize")))
+//                ).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
 //                // 将字节码写入文件
 //                writeClassToFile(dynamicType, dir);
                 return builder.method(
                         ElementMatchers.not(ElementMatchers.isConstructor())
-                                .and(ElementMatchers.not(ElementMatchers.named("equals"))
-                                        .and(ElementMatchers.not(ElementMatchers.named("toString"))
-                                                .and(ElementMatchers.not(ElementMatchers.named("hashCode"))
-                                                        .and(ElementMatchers.not(ElementMatchers.named("clone"))))))).intercept(MethodDelegation.to(MethodAroundInterceptor.class));
+                                .and(ElementMatchers.not(ElementMatchers.named("equals")))
+                                .and(ElementMatchers.not(ElementMatchers.named("toString")))
+                                .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
+                                .and(ElementMatchers.not(ElementMatchers.named("clone")))
+                                .and(ElementMatchers.not(ElementMatchers.named("finalize")))
+                ).intercept(MethodDelegation.to(MethodAroundInterceptor.class));
             }
-
             //
 
             return builder; // 不进行转换
         };
+
+//        AgentBuilder.Transformer httpTransformer = (builder, typeDescription, classLoader, javaModule) -> {
+//            return builder
+//                    .method(ElementMatchers.any())
+//                    .intercept(Advice.to(HttpLogInterceptor.class));
+//        };
         AgentBuilder.Listener listener = new AgentBuilder.Listener() {
             @Override
             public void onDiscovery(String s, ClassLoader classLoader, JavaModule javaModule, boolean b) {
@@ -95,9 +129,11 @@ public class AgentMainForByteBuddy {
                 .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
                 .with(listener)
                 .installOn(inst);
-        // 注册ClassFileTransformer
-//        inst.addTransformer(classFileTransformer);
+//        new AgentBuilder.Default()
+//                .type(ElementMatchers.nameEndsWith("Controller"))
+//                .transform(httpTransformer).installOn(inst);
     }
+
     private static void writeClassToFile(DynamicType.Unloaded<?> dynamicType, File dir) {
         String className = dynamicType.getTypeDescription().getName();
         String fileName = className.replace('.', '/') + ".class";
