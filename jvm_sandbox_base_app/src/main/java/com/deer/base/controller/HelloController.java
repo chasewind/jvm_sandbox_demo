@@ -27,5 +27,27 @@ public class HelloController {
         consumer.accept(userName);
         return helloService.sayHello(userName);
     }
+    @RequestMapping("/sayThread")
+    public String sayThread(){
+        //线程一
+        new Thread(this::first).start();
+
+        //线程二
+        new Thread(this::first).start();
+        return "OK";
+    }
+    public void first() {
+        System.out.println("测试结果：first");
+        second();
+    }
+
+    public void second() {
+        System.out.println("测试结果：second");
+        third();
+    }
+
+    public void third() {
+        System.out.println("测试结果：third");
+    }
 
 }
