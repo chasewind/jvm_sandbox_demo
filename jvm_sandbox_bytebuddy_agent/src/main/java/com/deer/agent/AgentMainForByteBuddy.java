@@ -48,41 +48,66 @@ public class AgentMainForByteBuddy {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
-//            return builder.method(ElementMatchers.any()).intercept(MethodDelegation.to(MethodCostTime.class));
-
-            //Advice
-//            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base.service")) {
-//                DynamicType.Unloaded<?> dynamicType = builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class)).make();
-//                // 将字节码写入文件
-//                writeClassToFile(dynamicType, dir);
-//                return builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class));
-//            }
-            //MethodDelegation
-            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base")) {
-//                DynamicType.Unloaded<?> dynamicType = builder.method(
+//        AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
+////            return builder.method(ElementMatchers.any()).intercept(MethodDelegation.to(MethodCostTime.class));
+//
+//            //Advice
+////            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base.service")) {
+////                DynamicType.Unloaded<?> dynamicType = builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class)).make();
+////                // 将字节码写入文件
+////                writeClassToFile(dynamicType, dir);
+////                return builder.method(ElementMatchers.any()).intercept(Advice.to(MethodInterceptor.class));
+////            }
+//            //MethodDelegation
+//            if (classLoader != null && typeDescription.getName().startsWith("com.deer.base")) {
+////                DynamicType.Unloaded<?> dynamicType = builder.method(
+////                        ElementMatchers.not(ElementMatchers.isConstructor())
+////                                .and(ElementMatchers.not(ElementMatchers.named("equals")))
+////                                .and(ElementMatchers.not(ElementMatchers.named("toString")))
+////                                .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
+////                                .and(ElementMatchers.not(ElementMatchers.named("clone")))
+////                                .and(ElementMatchers.not(ElementMatchers.named("finalize")))
+////                ).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
+////                // 将字节码写入文件
+////                writeClassToFile(dynamicType, dir);
+//                return builder.method(
 //                        ElementMatchers.not(ElementMatchers.isConstructor())
 //                                .and(ElementMatchers.not(ElementMatchers.named("equals")))
 //                                .and(ElementMatchers.not(ElementMatchers.named("toString")))
 //                                .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
 //                                .and(ElementMatchers.not(ElementMatchers.named("clone")))
 //                                .and(ElementMatchers.not(ElementMatchers.named("finalize")))
-//                ).intercept(MethodDelegation.to(MethodAroundInterceptor.class)).make();
-//                // 将字节码写入文件
-//                writeClassToFile(dynamicType, dir);
-                return builder.method(
+//                ).intercept(MethodDelegation.to(MethodAroundInterceptor.class));
+//            }
+//            //
+//
+//            return builder; // 不进行转换
+//        };
+
+
+        AgentBuilder.Transformer transformer = (builder, typeDescription, classLoader, javaModule) -> {
+            //MethodDelegation
+            if (classLoader != null ) {
+                builder = builder.method(
                         ElementMatchers.not(ElementMatchers.isConstructor())
                                 .and(ElementMatchers.not(ElementMatchers.named("equals")))
                                 .and(ElementMatchers.not(ElementMatchers.named("toString")))
                                 .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
                                 .and(ElementMatchers.not(ElementMatchers.named("clone")))
                                 .and(ElementMatchers.not(ElementMatchers.named("finalize")))
-                ).intercept(MethodDelegation.to(MethodAroundInterceptor.class));
+                                .or(ElementMatchers.named("run"))
+                                .or(ElementMatchers.named("apply"))
+                                .or(ElementMatchers.named("accept"))
+                ).intercept(MethodDelegation.to(MethodTraceInterceptor.class));
+                //
+                DynamicType.Unloaded<?> dynamicType =builder.make();
+                // 将字节码写入文件
+                writeClassToFile(dynamicType, dir);
             }
-            //
 
             return builder; // 不进行转换
         };
+
 
 //        AgentBuilder.Transformer httpTransformer = (builder, typeDescription, classLoader, javaModule) -> {
 //            return builder
@@ -114,7 +139,7 @@ public class AgentMainForByteBuddy {
 
             @Override
             public void onComplete(String typeName, ClassLoader classLoader, JavaModule javaModule, boolean b) {
-                if(typeName.startsWith("com.deer.base")){
+                if(typeName.startsWith("com.deer")){
                     System.out.println("onComplete: " + typeName);
                 }
 
@@ -122,17 +147,33 @@ public class AgentMainForByteBuddy {
 
         };
 
+//        new AgentBuilder
+//                .Default()
+//                .type(ElementMatchers.nameStartsWith("com.deer.base"))
+//                .transform(transformer)
+//                .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
+////                .with(AgentBuilder.LambdaInstrumentationStrategy.ENABLED)
+//                .with(listener)
+//                .installOn(inst);
+////        new AgentBuilder.Default()
+////                .type(ElementMatchers.nameEndsWith("Controller"))
+////                .transform(httpTransformer).installOn(inst);
+
+        //丰富条件
         new AgentBuilder
                 .Default()
-                .type(ElementMatchers.nameStartsWith("com.deer.base"))
+                .type(
+                        ElementMatchers.nameMatches("com.deer.special.RunnableWrapper")
+                                .or(ElementMatchers.nameMatches("com.deer.special.FunctionWrapper"))
+                                .or(ElementMatchers.nameMatches("com.deer.special.ConsumerWrapper"))
+                                .or(ElementMatchers.nameStartsWith("com.deer.base.service"))
+                                .or(ElementMatchers.nameStartsWith("com.deer.base.controller"))
+                )
                 .transform(transformer)
                 .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
-//                .with(AgentBuilder.LambdaInstrumentationStrategy.ENABLED)
                 .with(listener)
                 .installOn(inst);
-//        new AgentBuilder.Default()
-//                .type(ElementMatchers.nameEndsWith("Controller"))
-//                .transform(httpTransformer).installOn(inst);
+
     }
 
     private static void writeClassToFile(DynamicType.Unloaded<?> dynamicType, File dir) {

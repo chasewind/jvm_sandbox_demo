@@ -4,6 +4,7 @@ import com.deer.base.domain.User;
 import com.deer.base.service.BaseService;
 import com.deer.base.service.HelloService;
 import com.deer.base.session.SessionHolder;
+import com.deer.special.ConsumerWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,10 @@ public class HelloController {
         //lambda 语法
         Consumer<String> consumer = (s) -> System.out.println("in lambda: "+s);
         consumer.accept(userName);
+
+        //lambda 语法封装
+        ConsumerWrapper<String> consumerWrapper =new ConsumerWrapper<>(consumer);
+        consumerWrapper.accept(userName);
         return helloService.sayHello(userName);
     }
     @RequestMapping("/sayThread")
