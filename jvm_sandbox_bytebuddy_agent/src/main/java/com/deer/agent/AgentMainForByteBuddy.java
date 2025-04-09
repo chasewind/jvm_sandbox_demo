@@ -43,25 +43,18 @@ public class AgentMainForByteBuddy {
                 .transform((builder, typeDescription, classLoader, javaModule) ->
                         builder.method(ElementMatchers.named("accept"))
                                 .intercept(MethodDelegation.to(CommonLambdaInterceptor.class)))
+                .type(ElementMatchers.isAnnotatedWith(ElementMatchers.named("org.springframework.web.bind.annotation.RestController")))
+                .transform((builder, typeDescription, classLoader, javaModule) ->
+                        builder.method(ElementMatchers.not(ElementMatchers.isConstructor())
+                                        .and(ElementMatchers.not(ElementMatchers.named("equals")))
+                                        .and(ElementMatchers.not(ElementMatchers.named("toString")))
+                                        .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
+                                        .and(ElementMatchers.not(ElementMatchers.named("clone")))
+                                        .and(ElementMatchers.not(ElementMatchers.named("finalize"))))
+                                .intercept(MethodDelegation.to(SpringControllerInterceptor.class)))
                 .installOn(inst);
 
 
     }
 
-    private static void writeClassToFile(DynamicType.Unloaded<?> dynamicType, File dir) {
-        String className = dynamicType.getTypeDescription().getName();
-        String fileName = className.replace('.', '/') + ".class";
-        File outputFile = new File(dir, fileName);
-        // 创建父目录
-        File parentDir = outputFile.getParentFile();
-        if (!parentDir.exists()) {
-            parentDir.mkdirs(); // 确保父目录存在
-        }
-        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-            fos.write(dynamicType.getBytes());
-            System.out.println("Class written to: " + outputFile.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
