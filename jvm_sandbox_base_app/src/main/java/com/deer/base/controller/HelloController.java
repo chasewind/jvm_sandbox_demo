@@ -5,6 +5,7 @@ import com.deer.base.service.BaseService;
 import com.deer.base.service.HelloService;
 import com.deer.base.session.SessionHolder;
 import com.deer.special.ConsumerWrapper;
+import com.deer.special.RunnableWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,8 @@ public class HelloController {
 
         //线程二
         new Thread(this::first).start();
+        //线程3
+        new Thread(new RunnableWrapper(() -> first())).start();
         return "OK";
     }
     public void first() {
