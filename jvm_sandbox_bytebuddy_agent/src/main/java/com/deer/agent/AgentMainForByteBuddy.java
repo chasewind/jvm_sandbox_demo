@@ -102,6 +102,20 @@ public class AgentMainForByteBuddy {
                                         .and(ElementMatchers.not(ElementMatchers.named("clone")))
                                         .and(ElementMatchers.not(ElementMatchers.named("finalize"))))
                                 .intercept(MethodDelegation.to(SpringControllerInterceptor.class)))
+                .type(ElementMatchers.nameStartsWith("com.deer.base.service"))
+                .transform((builder, typeDescription, classLoader, javaModule,protectionDomain) ->{
+                    builder= builder.method(ElementMatchers.not(ElementMatchers.isConstructor())
+                            .and(ElementMatchers.not(ElementMatchers.named("equals")))
+                            .and(ElementMatchers.not(ElementMatchers.named("toString")))
+                            .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
+                            .and(ElementMatchers.not(ElementMatchers.named("clone")))
+                            .and(ElementMatchers.not(ElementMatchers.named("finalize"))))
+                            .intercept(MethodDelegation.to(CommonBizInterceptor.class));
+                    DynamicType.Unloaded<?> dynamicType = builder.make();
+                    // 将字节码写入文件
+                    writeClassToFile(dynamicType, dir);
+                 return builder;
+                })
                 .with(listener)
                 .installOn(inst);
 

@@ -1,6 +1,7 @@
 package com.deer.base.service.impl;
 
 import com.deer.base.domain.User;
+import com.deer.base.service.BaseService;
 import com.deer.base.service.HelloService;
 import com.deer.base.service.InnerService;
 import com.deer.base.session.SessionHolder;
@@ -27,6 +28,12 @@ public class HelloServiceImpl implements HelloService {
         doOtherBiz();
         User user = SessionHolder.getCurrentUser();
         return "hello ," + userName + ",seq = " + seq.incrementAndGet()+","+user.getNickName();
+    }
+
+    @Override
+    public void sayA() {
+        BaseService.record("jack");
+        BaseService.record("json");
     }
 
     private void doOtherBiz() {

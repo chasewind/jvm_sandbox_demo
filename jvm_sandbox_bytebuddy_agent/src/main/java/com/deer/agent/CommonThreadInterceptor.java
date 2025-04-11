@@ -20,11 +20,11 @@ public class CommonThreadInterceptor extends PreciseInterceptor{
 
         try {
 //             获取 traceId 字段
-            java.lang.reflect.Field field = method.getDeclaringClass().getDeclaredField("traceId");
-            field.setAccessible(true);
-            String traceId = (String) field.get(obj);
-            System.out.println("no loss traceId: " + traceId);
-            TrackContext.setLinkId(traceId);
+//            java.lang.reflect.Field field = method.getDeclaringClass().getDeclaredField("traceId");
+//            field.setAccessible(true);
+//            String traceId = (String) field.get(obj);
+//            System.out.println("no loss traceId: " + traceId);
+//            TrackContext.setLinkId(traceId);
             // 原有函数执行
                callable.call();
         } catch (Exception e) {

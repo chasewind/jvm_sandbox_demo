@@ -44,6 +44,16 @@ public class HelloController {
         new Thread(new RunnableWrapper(this::first)).start();
         return "OK";
     }
+
+
+    @RequestMapping("/sayBase")
+    public String sayBase(){
+        helloService.sayA();
+        return "base";
+    }
+
+
+
     public void first() {
         System.out.println("测试结果：first");
         second();
@@ -57,5 +67,7 @@ public class HelloController {
     public void third() {
         System.out.println("测试结果：third");
     }
+
+
 
 }
