@@ -41,12 +41,7 @@ public class HelloController {
         //线程二
 //        new Thread(this::first).start();
         //线程3
-        new Thread(new RunnableWrapper(new Runnable() {
-            @Override
-            public void run() {
-                first();
-            }
-        })).start();
+        new Thread(new RunnableWrapper(this::first)).start();
         return "OK";
     }
     public void first() {
