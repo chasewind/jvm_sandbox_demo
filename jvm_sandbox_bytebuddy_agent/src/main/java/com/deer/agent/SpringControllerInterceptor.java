@@ -19,6 +19,7 @@ public class SpringControllerInterceptor extends PreciseInterceptor {
     public static Object intercept(@Origin Method method, @AllArguments Object[] args, @SuperCall Callable<?> callable) throws Exception {
         try {
             //代码入口处是标准的方法定义，不可能起步就是线程
+            //如果是同一个类，内部方法A起线程调用方法B，此时就需要尝试找线程数据，把线程数据也拼接回来
             OpenTrace openTrace = OpenTraceContext.getTrace();
             Span currentSpan = null;
             boolean isEntrance = false;

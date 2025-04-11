@@ -1,5 +1,6 @@
 package com.deer.agent;
 
+import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import net.bytebuddy.implementation.bind.annotation.SuperCall;
@@ -13,7 +14,7 @@ public class CommonBizInterceptor extends PreciseInterceptor{
         return "普通业务所在package内方法拦截";
     }
     @RuntimeType
-    public static Object intercept(@Origin Method method,  @SuperCall Callable<?> callable) throws Exception {
+    public static Object intercept( @Origin Method method, @SuperCall Callable<?> callable) throws Exception {
         try {
             //当前方法可能被放进线程中调用，也有可能直接调用
             OpenTrace openTrace = OpenTraceContext.getTrace();

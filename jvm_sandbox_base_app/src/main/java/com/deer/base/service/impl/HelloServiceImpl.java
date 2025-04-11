@@ -26,6 +26,7 @@ public class HelloServiceImpl implements HelloService {
     public String sayHello(String userName) {
         threadLocal.set(seq.intValue());
         doOtherBiz();
+
         User user = SessionHolder.getCurrentUser();
         return "hello ," + userName + ",seq = " + seq.incrementAndGet()+","+user.getNickName();
     }
@@ -38,6 +39,7 @@ public class HelloServiceImpl implements HelloService {
 
     private void doOtherBiz() {
         System.out.println("before :outer thread "+threadLocal.get());
+        BaseService.record("random");
 //        new Thread(()->{
 //            System.out.println("after : inner thread "+threadLocal.get());
 //        }).start();

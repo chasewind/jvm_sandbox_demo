@@ -40,8 +40,8 @@ public class HelloController {
 
         //线程二
 //        new Thread(this::first).start();
-        //线程3
-        new Thread(new RunnableWrapper(this::first)).start();
+        //线程3,先考虑跨类调用，同类调用需回写
+        new Thread(new RunnableWrapper(BaseService::first)).start();
         return "OK";
     }
 
@@ -54,19 +54,6 @@ public class HelloController {
 
 
 
-    public void first() {
-        System.out.println("测试结果：first");
-        second();
-    }
-
-    public void second() {
-        System.out.println("测试结果：second");
-        third();
-    }
-
-    public void third() {
-        System.out.println("测试结果：third");
-    }
 
 
 
