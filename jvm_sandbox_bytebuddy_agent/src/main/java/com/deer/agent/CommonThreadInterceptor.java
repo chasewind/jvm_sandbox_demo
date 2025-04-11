@@ -1,10 +1,7 @@
 package com.deer.agent;
 
 import net.bytebuddy.asm.Advice;
-import net.bytebuddy.implementation.bind.annotation.AllArguments;
-import net.bytebuddy.implementation.bind.annotation.Origin;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.implementation.bind.annotation.SuperCall;
+import net.bytebuddy.implementation.bind.annotation.*;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -15,19 +12,21 @@ public class CommonThreadInterceptor extends PreciseInterceptor{
     public String getDescription() {
         return "拦截线程对应的Runnable Callable";
     }
+
     @RuntimeType
-    public static Object intercept(@Advice.This Object obj, @Origin Method method, @SuperCall Callable<?> callable) throws Exception {
-        System.out.println("Intercepting method: " + method.getName() + " of class: " + obj.getClass().getName());
+    public static void intercept(@This Object obj, @Origin Method method, @SuperCall Callable<?> callable) throws Exception {
+
+        System.out.println("Intercepting method: " + method.getName() + " of class: " + obj.getClass().getCanonicalName());
 
         try {
-            // 获取 traceId 字段并设置值
-            java.lang.reflect.Field field = obj.getClass().getDeclaredField("traceId");
-            field.setAccessible(true); // 设置可访问性
-            String traceId = (String) field.get(obj); // 获取 traceId 的值
-            System.out.println("traceId: " + traceId); // 输出 traceId 的值
+//             获取 traceId 字段
+            java.lang.reflect.Field field = method.getDeclaringClass().getDeclaredField("traceId");
+            field.setAccessible(true);
+            String traceId = (String) field.get(obj);
+            System.out.println("no loss traceId: " + traceId);
+            TrackContext.setLinkId(traceId);
             // 原有函数执行
-              callable.call();
-              return null;
+               callable.call();
         } catch (Exception e) {
             throw e;
         }

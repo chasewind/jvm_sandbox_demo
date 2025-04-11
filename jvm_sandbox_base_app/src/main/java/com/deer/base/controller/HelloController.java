@@ -36,12 +36,17 @@ public class HelloController {
     @RequestMapping("/sayThread")
     public String sayThread(){
         //线程一
-        new Thread(this::first).start();
+//        new Thread(this::first).start();
 
         //线程二
-        new Thread(this::first).start();
+//        new Thread(this::first).start();
         //线程3
-        new Thread(new RunnableWrapper(() -> first())).start();
+        new Thread(new RunnableWrapper(new Runnable() {
+            @Override
+            public void run() {
+                first();
+            }
+        })).start();
         return "OK";
     }
     public void first() {

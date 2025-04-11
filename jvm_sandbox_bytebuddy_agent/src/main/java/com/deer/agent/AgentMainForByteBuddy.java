@@ -74,9 +74,9 @@ public class AgentMainForByteBuddy {
                                         .defineField("traceId", String.class, Visibility.PUBLIC)
                                         // 拦截构造函数，设置 traceId
                                         .constructor(ElementMatchers.any())
-                                        .intercept(Advice.to(ConstructorInterceptor.class));
-//                                    .method(ElementMatchers.named("run"))
-//                                    .intercept(MethodDelegation.to(CommonThreadInterceptor.class));
+                                        .intercept(Advice.to(ConstructorInterceptor.class))
+                                        .method(ElementMatchers.named("run"))
+                                        .intercept(MethodDelegation.to(CommonThreadInterceptor.class));
                                 DynamicType.Unloaded<?> dynamicType = builder.make();
                                 // 将字节码写入文件
                                 writeClassToFile(dynamicType, dir);
