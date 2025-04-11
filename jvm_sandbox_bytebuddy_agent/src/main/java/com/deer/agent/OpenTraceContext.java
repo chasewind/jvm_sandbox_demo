@@ -26,6 +26,9 @@ public class OpenTraceContext {
     public static Span getSpan() {
         return SPAN_LOCAL.get();
     }
+    public static void saveSpan(Span span){
+        SPAN_LOCAL.set(span);
+    }
 
     public static void setSpan(Span span) {
 

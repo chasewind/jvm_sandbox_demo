@@ -32,7 +32,10 @@ public class CommonThreadInterceptor extends PreciseInterceptor{
                     Span span = new Span();
                     span.traceId = openTrace.traceId;
                     span.spanId = method.getDeclaringClass().getName() + "." + method.getName();
+                    span.parentSpan=lastChild;
                     lastChild.childrenList.add(span);
+                    //此时可以先把当前信息存入线程上下文
+                    OpenTraceContext.saveSpan(span);
                 }
             }
             // 原有函数执行

@@ -16,6 +16,7 @@ public class CommonBizInterceptor extends PreciseInterceptor{
     @RuntimeType
     public static Object intercept( @Origin Method method, @SuperCall Callable<?> callable) throws Exception {
         try {
+            Span threadSpan = OpenTraceContext.getSpan();
             //当前方法可能被放进线程中调用，也有可能直接调用
             OpenTrace openTrace = OpenTraceContext.getTrace();
             Span currentSpan = null;
@@ -24,6 +25,15 @@ public class CommonBizInterceptor extends PreciseInterceptor{
             if (openTrace == null) {
                 isInThread = true;
             }
+            if(threadSpan!=null && openTrace == null){
+                openTrace = OpenTraceManager.getTrace(threadSpan.traceId);
+                Span span = new Span();
+                span.traceId = openTrace.traceId;
+                span.spanId = method.getDeclaringClass().getName() + "." + method.getName();
+                span.parentSpan=threadSpan;
+                threadSpan.childrenList.add(span);
+            }
+
             //以下是标准模式 入口--->上下文处理--->出口
             if(!isInThread){
                 Span span = new Span();
