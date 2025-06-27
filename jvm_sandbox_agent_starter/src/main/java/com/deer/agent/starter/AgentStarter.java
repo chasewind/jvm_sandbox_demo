@@ -28,10 +28,11 @@ public class AgentStarter {
             return;
         }
         System.out.println("find processId ,and ready to attach..."+processId);
-        String agentPath="/Users/dreamworld/workspace/jvm_sandbox_demo/jvm_sandbox_bytebuddy_agent/target/jvm_sandbox_bytebuddy_agent-1.0-SNAPSHOT-jar-with-dependencies.jar";
+        String agentPath="/Users/dreamworld/workspace/jvm_sandbox_demo/jvm_sandbox_runtime_arthas/target/jvm_sandbox_runtime_arthas-1.0-SNAPSHOT-jar-with-dependencies.jar";
         try {
             VirtualMachine vm = VirtualMachine.attach(processId);
             vm.loadAgent(agentPath);
+            vm.detach();
         }catch (Exception e){
             e.printStackTrace();
         }

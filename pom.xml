@@ -31,6 +31,7 @@
     <module>jvm_sandbox_bytebuddy_agent</module>
       <module>jvm_sandbox_javassist_core</module>
       <module>jvm_sandbox_ali_agent</module>
+      <module>jvm_sandbox_runtime_arthas</module>
   </modules>
 
   <dependencyManagement>
