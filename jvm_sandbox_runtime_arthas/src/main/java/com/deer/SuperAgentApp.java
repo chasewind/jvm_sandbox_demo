@@ -92,10 +92,7 @@ public class SuperAgentApp {
 
     @RuntimeType
     public static Object intercept(@Origin Method method, @SuperCall Callable<Object> callable) throws Exception {
-        long start = System.nanoTime();
         Object result = callable.call();
-        long duration = System.nanoTime() - start;
-        System.out.println(method + ": " + duration + " ns");
         // 检查 result 是否为 null
         if (result != null) {
 
